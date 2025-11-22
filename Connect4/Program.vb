@@ -6,14 +6,11 @@ Module Program
     Dim Board(5, 6) As String
     Dim P1Name As String = ""
     Dim P2Name As String = ""
-    Dim P1Symbol As String = ""
-    Dim P2Symbol As String = ""
 
     Sub Main()
 
         Console.Title = "Connect 4"
         Console.CursorVisible = False
-        SetUpBoard()
         Welcome()
 
         Dim Running As Boolean = True
@@ -117,7 +114,7 @@ Module Program
         Next
     End Sub
 
-    Sub SelectSymbols()
+    Sub SelectSymbols(ByRef P1Symbol As String, ByRef P2Symbol As String)
         Dim Choice As String
 
         'Validation for correct symbol
@@ -153,10 +150,13 @@ Module Program
     Sub PlayGame()
         Dim Turns As Integer = 0
         Dim GameEnd As Boolean = False
+        Dim P1Symbol As String = ""
+        Dim P2Symbol As String = ""
 
         'Main game runthrough loop
+        SetUpBoard()
         Console.Clear()
-        SelectSymbols()
+        SelectSymbols(P1Symbol, P2Symbol)
 
         'Displays Board, waits for user to begin
         Console.Clear()
@@ -170,12 +170,12 @@ Module Program
 
             If Turns Mod 2 = 0 Then
                 'Player 1 Turn
-                PlaceSymbol(P1Symbol)
-                CheckWin(P1Symbol, GameEnd)
+                PlaceSymbol(P1Symbol, P1Symbol)
+                CheckWin(P1Symbol, P1Symbol, GameEnd)
             Else
                 'Player 2 Turn
-                PlaceSymbol(P2Symbol)
-                CheckWin(P2Symbol, GameEnd)
+                PlaceSymbol(P2Symbol, P1Symbol)
+                CheckWin(P2Symbol, P1Symbol, GameEnd)
             End If
 
             Turns += 1 'Increment turn counter
@@ -184,7 +184,7 @@ Module Program
 
     End Sub
 
-    Sub PlaceSymbol(ByVal Symbol As String)
+    Sub PlaceSymbol(ByVal Symbol As String, ByVal P1Symbol As String)
         Dim Column As Integer
 
         'Input Loop with Validation
@@ -248,7 +248,7 @@ Module Program
 
     End Sub
 
-    Sub CheckWin(ByVal Symbol As String, ByRef GameEnd As Boolean)
+    Sub CheckWin(ByVal Symbol As String, ByVal P1Symbol As String, ByRef GameEnd As Boolean)
 
         Dim GameWin As Boolean = False
         Dim SpacesLeft As Integer = 0
