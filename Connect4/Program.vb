@@ -1,5 +1,6 @@
 Imports System
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Data.Common
 
 Module Program
 
@@ -23,8 +24,11 @@ Module Program
                 Case "1" 'Play Game Selected
                     PlayGame()
 
-                    'Play Computer Selected
                 Case "2"
+
+                    'Play Computer Selected
+                    P2Name = "Computer"
+                    PlayGame()
 
                     'Exit Game
                 Case "3"
@@ -146,7 +150,6 @@ Module Program
         Console.ReadKey()
 
     End Sub
-
     Sub PlayGame()
         Dim Turns As Integer = 0
         Dim GameEnd As Boolean = False
@@ -172,6 +175,11 @@ Module Program
                 'Player 1 Turn
                 PlaceSymbol(P1Symbol, P1Symbol)
                 CheckWin(P1Symbol, P1Symbol, GameEnd)
+
+            'ElseIf Turns Mod 2 = 1 And P2Name = "Computer" Then
+
+            '    ComputerPlace(P2Symbol)
+            '    CheckWin(P1Symbol, P1Symbol, GameEnd)
             Else
                 'Player 2 Turn
                 PlaceSymbol(P2Symbol, P1Symbol)
@@ -181,6 +189,36 @@ Module Program
             Turns += 1 'Increment turn counter
 
         End While
+
+    End Sub
+
+    Sub PlayComputer()
+
+        Dim Turns As Integer = 0
+        Dim GameEnd As Boolean = False
+        Dim P1Symbol As String = ""
+        Dim P2Symbol As String = ""
+        Dim Difficulty As Integer
+
+        Console.Write("Options:                   " & Environment.NewLine &
+                      "---------------------------" & Environment.NewLine &
+                      "[1] Easy                   " & Environment.NewLine &
+                      "[2] Hard                   " & Environment.NewLine &
+                      "Enter Computer Difficulty: " & Environment.NewLine & "> ")
+
+        Difficulty = Console.ReadLine()
+
+        'Main game runthrough loop
+        SetUpBoard()
+        Console.Clear()
+        SelectSymbols(P1Symbol, P2Symbol)
+
+        'Displays Board, waits for user to begin
+        Console.Clear()
+        DisplayBoard()
+
+        Console.Write("Ready to play? (Press any key to continue) : ")
+        Console.ReadKey()
 
     End Sub
 
@@ -222,6 +260,44 @@ Module Program
 
         DisplayBoard()
         Threading.Thread.Sleep(200)
+
+    End Sub
+
+    Function ComputerDifficulty()
+        Dim Difficulty As String
+
+        Console.Clear()
+        Console.Write("Options:                  " & Environment.NewLine &
+              "--------------------------" & Environment.NewLine &
+              "[1] Easy                  " & Environment.NewLine &
+              "[2] Hard                  " & Environment.NewLine &
+              "Enter Computer Dificulty: " & Environment.NewLine & "> ")
+
+        Difficulty = Console.ReadLine()
+        Return Difficulty
+
+    End Function
+    Sub ComputerPlace(ByVal Symbol As String)
+        Dim Random As New Random
+        Dim Column As Integer
+
+        While True
+            Console.Clear()
+            DisplayBoard()
+            Console.WriteLine(Environment.NewLine & "Computer Thinking....")
+            Threading.Thread.Sleep(1000)
+
+            Column = Random.Next(0, 7)
+
+            If Board(0, Column) = "." Then
+                Board(0, Column) = Symbol
+                Exit While
+            End If
+
+        End While
+
+        Console.Clear()
+        SymbolAnimation(Symbol, Column)
 
     End Sub
 
